@@ -1,5 +1,6 @@
 import 'dart:collection';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
@@ -52,16 +53,7 @@ class MapSampleState extends State<MapSample> {
         'Your Part of Land is Saved!🚀',
         style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black),
       ),
-      // action: SnackBarAction(
-      //   label: '',
-      //   onPressed: () {
-      //     // Some code to undo the change.
-      //   },
-      // ),
     );
-
-    // Find the Scaffold in the widget tree and use
-    // it to show a SnackBar.
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
@@ -93,6 +85,18 @@ class MapSampleState extends State<MapSample> {
       target: LatLng(20.5937, 78.9629),
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
+
+  Future<http.Response> createAlbum(String title) {
+    return http.post(
+      'https://jsonplaceholder.typicode.com/albums',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'title': title,
+      }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
