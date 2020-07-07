@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "672433290903",
+    "firebase_url": "https://aatmanirbhar-krishi.firebaseio.com",
+    "project_id": "aatmanirbhar-krishi",
+    "storage_bucket": "aatmanirbhar-krishi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672433290903:android:b74b9986f9c94bd936f3d2",
+        "android_client_info": {
+          "package_name": "com.example.aatmanirbhar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "672433290903-cb1cnev2rp2eidm6fpl0gjfah4k83tol.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.aatmanirbhar",
+            "certificate_hash": "948f1af814718f7e9acf48c18fcb7cd8a9153c9e"
+          }
+        },
+        {
+          "client_id": "672433290903-75nmtba1qs5fba5jht1hiibd6u6ejouv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0hyq4RrNNNAMrRqx43yDuBEZS-vCrIvc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "672433290903-75nmtba1qs5fba5jht1hiibd6u6ejouv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
