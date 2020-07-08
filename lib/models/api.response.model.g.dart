@@ -6,25 +6,27 @@ part of 'api.response.model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AgroResponse _$AgroResponseFromJson(Map<String, dynamic> json) {
-  return AgroResponse(
+ApiResponse _$ApiResponseFromJson(Map<String, dynamic> json) {
+  return ApiResponse(
     id: json['id'] as String,
-    geoJson: GeoJson.fromJson(json['geoJson'] as Map<String, dynamic>),
+    geo_json: GeoJson.fromJson(json['geo_json'] as Map<String, dynamic>),
     name: json['name'] as String,
     center: (json['center'] as List).map((e) => (e as num).toDouble()).toList(),
     area: (json['area'] as num).toDouble(),
-    userId: json['userId'] as String,
+    user_id: json['user_id'] as String,
+    created_at: json['created_at'] as int,
   );
 }
 
-Map<String, dynamic> _$AgroResponseToJson(AgroResponse instance) =>
+Map<String, dynamic> _$ApiResponseToJson(ApiResponse instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'geoJson': instance.geoJson,
+      'geo_json': instance.geo_json,
       'name': instance.name,
       'center': instance.center,
       'area': instance.area,
-      'userId': instance.userId,
+      'user_id': instance.user_id,
+      'created_at': instance.created_at,
     };
 
 GeoJson _$GeoJsonFromJson(Map<String, dynamic> json) {

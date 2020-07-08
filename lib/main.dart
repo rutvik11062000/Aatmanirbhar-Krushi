@@ -1,7 +1,11 @@
+import 'package:aatmanirbhar/models/AgroModes/agro.image.response.model.dart';
+import 'package:aatmanirbhar/models/AgroModes/agro.soil.model.dart';
 import 'package:aatmanirbhar/pages/homepage.dart';
 import 'package:aatmanirbhar/pages/krushipage.dart';
 import 'package:aatmanirbhar/pages/map.page.dart';
 import 'package:aatmanirbhar/pages/personalpage.dart';
+import 'package:aatmanirbhar/services/AgroApiServices/polygon.image.service.dart';
+import 'package:aatmanirbhar/services/AgroApiServices/soil.data.service.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
@@ -87,9 +91,15 @@ class _MainPageState extends State<MainPage> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Icon(
-              FontAwesomeIcons.cog,
-              // size: 30,
+            child: IconButton(
+              icon: Icon(
+                FontAwesomeIcons.cog,
+                // size: 30,
+              ),
+              onPressed: () async {
+                AgroSoilResponse agroSoilResponse = await fetchSoilData();
+                print(agroSoilResponse.t10);
+              },
             ),
           ),
         ],

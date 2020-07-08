@@ -1,5 +1,8 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'package:aatmanirbhar/models/api.request.model.dart' as Request;
+import 'package:aatmanirbhar/models/api.response.model.dart';
+import 'package:aatmanirbhar/services/firestore.service.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -23,6 +26,44 @@ class MapSampleState extends State<MapSample> {
   int _polygonCounter = 1;
   List<LatLng> polyLatLng = List<LatLng>();
   bool _isPolygon = false;
+
+  void createConnection(Request.ApiRequest request) async {
+    final http.Response response = await http.post(
+      'http://api.agromonitoring.com/agro/1.0/polygons?appid=3104cf3a98380e9333f8dc55232dae20',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(request.toJson()),
+    );
+
+    if (response.statusCode == 201) {
+      ApiResponse res = ApiResponse.fromJson(json.decode(response.body));
+      print(response.body);
+      print(res.id);
+      addPolygonData(res.id);
+    } else {
+      print("failed");
+      print(response.body);
+      // throw Exception('Failed to load album');
+    }
+  }
+
+  void fetchAlbum() async {
+    final response = await http
+        .get('http://api.agromonitoring.com/agro/1.0/polygons?appid= tr4t ');
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      // dynamic f = AgroResponse.fromJson(json.decode(response.body));
+      print(response.body);
+      print("pass");
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
 
   Widget _profileOption({IconData iconData, Function onPressed}) {
     return UnicornButton(
@@ -76,7 +117,7 @@ class MapSampleState extends State<MapSample> {
   }
 
   static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(21.1702, 72.8311),
+    target: LatLng(21.1071413, 71.688775),
     zoom: 14.4746,
   );
 
@@ -88,7 +129,7 @@ class MapSampleState extends State<MapSample> {
 
   Future<http.Response> createAlbum(String title) {
     return http.post(
-      'https://jsonplaceholder.typicode.com/albums',
+      'http://api.agromonitoring.com/agro/1.0/polygons?appid=3f60fea56824398070cbf075be1e8b90',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -153,12 +194,29 @@ class MapSampleState extends State<MapSample> {
                     FlatButton.icon(
                         color: Colors.green,
                         onPressed: () {
+                          polyLatLng.add(polyLatLng[0]);
+                          Request.Geometry geometry = new Request.Geometry(
+                              type: "Polygon", coordinates: [polyLatLng]);
+                          Request.Properties properties =
+                              new Request.Properties();
+                          Request.GeoJson geoJson = new Request.GeoJson(
+                              geometry: geometry,
+                              properties: properties,
+                              type: "Feature");
+
+                          Request.ApiRequest req = new Request.ApiRequest(
+                              geo_json: geoJson, name: "aatmanirbharkrushi");
+                          // print(req.geo_json.geometry.coordinates);
                           setState(() {
                             _isPolygon = !_isPolygon;
                             polyLatLng = [];
                             _polygons.clear();
-                            showSnackBar();
                           });
+                          createConnection(req);
+                          // print(polyLatLng);
+                          // fetchAlbum();
+                          // print(jsonEncode(req.toJson()));
+                          showSnackBar();
                         },
                         icon: Icon(
                           FontAwesomeIcons.solidSave,

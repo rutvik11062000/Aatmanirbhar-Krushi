@@ -3,21 +3,28 @@ import 'package:json_annotation/json_annotation.dart';
 part 'api.response.model.g.dart';
 
 @JsonSerializable(nullable: false)
-class AgroResponse {
+class ApiResponse {
   String id;
-  GeoJson geoJson;
+  GeoJson geo_json;
   String name;
   List<double> center;
   double area;
-  String userId;
+  String user_id;
+  int created_at;
 
-  AgroResponse(
-      {this.id, this.geoJson, this.name, this.center, this.area, this.userId});
+  ApiResponse(
+      {this.id,
+      this.geo_json,
+      this.name,
+      this.center,
+      this.area,
+      this.user_id,
+      this.created_at});
 
-  factory AgroResponse.fromJson(Map<String, dynamic> json) =>
-      _$AgroResponseFromJson(json);
+  factory ApiResponse.fromJson(Map<String, dynamic> json) =>
+      _$ApiResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$AgroResponseToJson(this);
+  Map<String, dynamic> toJson() => _$ApiResponseToJson(this);
 }
 
 @JsonSerializable(nullable: false)

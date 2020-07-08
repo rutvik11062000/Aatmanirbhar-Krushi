@@ -5,9 +5,9 @@ part 'api.request.model.g.dart';
 @JsonSerializable(nullable: false)
 class ApiRequest {
   String name;
-  GeoJson geoJson;
+  GeoJson geo_json;
 
-  ApiRequest({this.name, this.geoJson});
+  ApiRequest({this.name, this.geo_json});
 
   factory ApiRequest.fromJson(Map<String, dynamic> json) =>
       _$ApiRequestFromJson(json);
@@ -25,6 +25,7 @@ class GeoJson {
 
   factory GeoJson.fromJson(Map<String, dynamic> json) =>
       _$GeoJsonFromJson(json);
+
   Map<String, dynamic> toJson() => _$GeoJsonToJson(this);
 }
 

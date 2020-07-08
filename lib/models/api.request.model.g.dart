@@ -9,14 +9,14 @@ part of 'api.request.model.dart';
 ApiRequest _$ApiRequestFromJson(Map<String, dynamic> json) {
   return ApiRequest(
     name: json['name'] as String,
-    geoJson: GeoJson.fromJson(json['geoJson'] as Map<String, dynamic>),
+    geo_json: GeoJson.fromJson(json['geo_json'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$ApiRequestToJson(ApiRequest instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'geoJson': instance.geoJson,
+      'geo_json': instance.geo_json,
     };
 
 GeoJson _$GeoJsonFromJson(Map<String, dynamic> json) {
