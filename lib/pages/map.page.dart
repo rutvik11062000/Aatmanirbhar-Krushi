@@ -12,13 +12,14 @@ import 'package:location/location.dart';
 import 'package:unicorndial/unicorndial.dart';
 
 class MapSample extends StatefulWidget {
-  final LocationData locationData;
-  MapSample({Key key, this.locationData}) : super(key: key);
+  // final LocationData locationData;
+  MapSample({Key key}) : super(key: key);
   @override
   State<MapSample> createState() => MapSampleState();
 }
 
-class MapSampleState extends State<MapSample> {
+class MapSampleState extends State<MapSample>
+    with AutomaticKeepAliveClientMixin {
   Completer<GoogleMapController> _controller = Completer();
   Location location = new Location();
   LocationData locationData;
@@ -103,7 +104,7 @@ class MapSampleState extends State<MapSample> {
 
     // Add Children here
     children.add(_profileOption(
-        iconData: FontAwesomeIcons.searchLocation, onPressed: _goToTheLake));
+        iconData: FontAwesomeIcons.searchLocation, onPressed: () {}));
     children.add(_profileOption(
         iconData: FontAwesomeIcons.drawPolygon,
         onPressed: () {
@@ -165,7 +166,7 @@ class MapSampleState extends State<MapSample> {
       ),
       floatingActionButton: _isPolygon == false
           ? UnicornDialer(
-              parentButtonBackground: Colors.green,
+              parentButtonBackground: Colors.teal,
               orientation: UnicornOrientation.VERTICAL,
               parentButton: Icon(Icons.menu),
               childButtons: _getProfileMenu(),
@@ -236,14 +237,18 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    locationData = await location.getLocation();
-    CameraPosition _kLake = CameraPosition(
-        bearing: 192.8334901395799,
-        target: LatLng(locationData.latitude, locationData.longitude),
-        // tilt: 59.440717697143555,
-        zoom: 19.151926040649414);
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  }
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
+  // Future<void> _goToTheLake() async {
+  //   final GoogleMapController controller = await _controller.future;
+  //   locationData = await location.getLocation();
+  //   CameraPosition _kLake = CameraPosition(
+  //       bearing: 192.8334901395799,
+  //       target: LatLng(locationData.latitude, locationData.longitude),
+  //       // tilt: 59.440717697143555,
+  //       zoom: 19.151926040649414);
+  //   controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  // }
 }

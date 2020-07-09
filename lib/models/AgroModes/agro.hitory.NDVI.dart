@@ -26,7 +26,7 @@ class R {
   String source;
   int zoom;
   int dc;
-  double cl;
+  int cl;
   Data data;
 
   R({this.dt, this.source, this.zoom, this.dc, this.cl, this.data});

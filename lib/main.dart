@@ -1,11 +1,13 @@
-import 'package:aatmanirbhar/models/AgroModes/agro.image.response.model.dart';
-import 'package:aatmanirbhar/models/AgroModes/agro.soil.model.dart';
+import 'package:aatmanirbhar/models/AgroModes/AgroWeatherModel/agro.history.weather.polygon.model.dart';
 import 'package:aatmanirbhar/pages/homepage.dart';
+
 import 'package:aatmanirbhar/pages/krushipage.dart';
 import 'package:aatmanirbhar/pages/map.page.dart';
-import 'package:aatmanirbhar/pages/personalpage.dart';
-import 'package:aatmanirbhar/services/AgroApiServices/polygon.image.service.dart';
-import 'package:aatmanirbhar/services/AgroApiServices/soil.data.service.dart';
+import 'package:aatmanirbhar/pages/middlepage.dart';
+import 'package:aatmanirbhar/pages/search.city.dart';
+import 'package:aatmanirbhar/pages/tempPage.dart';
+
+import 'package:aatmanirbhar/services/AgroApiServices/weather.service.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
@@ -22,9 +24,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Aatmanirbhar Krushi',
       theme: ThemeData(
-        primarySwatch: Colors.green,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+          primarySwatch: Colors.teal,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          fontFamily: 'OpenSans'),
       home: MainPage(),
     );
   }
@@ -38,14 +40,30 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  int pageIndex = 0;
   Location location = new Location();
+  PageController pageController;
+
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
   LocationData locationData;
   @override
   void initState() {
-    super.initState();
+    pageController = PageController();
     _checkLocationPermission();
+    super.initState();
+  }
+
+  onPageChanged(int pageIndex) {
+    setState(() {
+      this.pageIndex = pageIndex;
+    });
+  }
+
+  onTap(int pageIndex) {
+    pageController.jumpToPage(
+      pageIndex,
+    );
   }
 
   _checkLocationPermission() async {
@@ -75,11 +93,13 @@ class _MainPageState extends State<MainPage> {
   }
 
   final List<Widget> pages = [
-    MapSample(),
     HomePage(
       title: "Aatmanirbhar Krushi",
     ),
-    KrushiPage(),
+    MapSample(),
+    // KrushiPage()
+    // MiddlePage(),
+    Temp()
   ];
 
   @override
@@ -87,38 +107,65 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       // drawer: Drawer(),
       appBar: AppBar(
-        title: Text("Aatmanirbhar Krushi"),
+        elevation: 0.0,
+        title: Text("Aatmanirbhar Krushi",
+            style: TextStyle(fontWeight: FontWeight.w600)),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-              icon: Icon(
-                FontAwesomeIcons.cog,
-                // size: 30,
-              ),
-              onPressed: () async {
-                AgroSoilResponse agroSoilResponse = await fetchSoilData();
-                print(agroSoilResponse.t10);
+            child: PopupMenuButton<int>(
+              onSelected: (value) {
+                switch (value) {
+                  case 1:
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchCity()),
+                    );
+                    break;
+                  default:
+                }
               },
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 1,
+                  child: ListTile(
+                    leading: Icon(FontAwesomeIcons.search),
+                    title: Text("Search city wise"),
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 2,
+                  child: ListTile(
+                    leading: Icon(FontAwesomeIcons.signOutAlt),
+                    title: Text("Sign Out"),
+                  ),
+                ),
+              ],
+              icon: Icon(Icons.more_horiz),
+              offset: Offset(0, 100),
             ),
           ),
         ],
       ),
-      body: SafeArea(
-          child: IndexedStack(index: _currentIndex, children: pages)), // new
+      body: PageView(
+        children: pages,
+        controller: pageController,
+        onPageChanged: onPageChanged,
+        physics: NeverScrollableScrollPhysics(),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         showUnselectedLabels: false,
         backgroundColor: Theme.of(context).primaryColor,
         selectedItemColor: Colors.white,
-        onTap: onTabTapped, // new
-        currentIndex: _currentIndex, // new
+        onTap: onTap, // new
+        currentIndex: pageIndex, // new
         items: [
-          new BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.map), title: Text('Krushi')),
           new BottomNavigationBarItem(
             icon: Icon(Icons.home),
             title: Text('Home'),
           ),
+          new BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.map), title: Text('Make Polygon')),
           new BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.tractor),
             title: Text('Kruhsi'),
@@ -128,3 +175,25 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
+
+// SafeArea(
+//           child: IndexedStack(index: _currentIndex, children: pages)), // new
+//       bottomNavigationBar: BottomNavigationBar(
+//         showUnselectedLabels: false,
+//         backgroundColor: Theme.of(context).primaryColor,
+//         selectedItemColor: Colors.white,
+//         onTap: onTabTapped, // new
+//         currentIndex: _currentIndex, // new
+//         items: [
+//           new BottomNavigationBarItem(
+//             icon: Icon(Icons.home),
+//             title: Text('Home'),
+//           ),
+//           new BottomNavigationBarItem(
+//               icon: Icon(FontAwesomeIcons.map), title: Text('Make Polygon')),
+//           new BottomNavigationBarItem(
+//             icon: Icon(FontAwesomeIcons.tractor),
+//             title: Text('Kruhsi'),
+//           ),
+//         ],
+//       ),

@@ -95,13 +95,13 @@ class Weather {
 
 class Main {
   double temp;
-  double tempMin;
+  var tempMin;
   double tempMax;
-  double pressure;
-  double seaLevel;
-  double grndLevel;
+  int pressure;
+  int seaLevel;
+  int grndLevel;
   int humidity;
-  double tempKf;
+  var tempKf;
 
   Main(
       {this.temp,
@@ -139,8 +139,8 @@ class Main {
 }
 
 class Wind {
-  double speed;
-  double deg;
+  var speed;
+  int deg;
 
   Wind({this.speed, this.deg});
 
