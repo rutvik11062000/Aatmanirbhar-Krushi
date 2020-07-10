@@ -87,7 +87,7 @@ class WeatherCart extends StatelessWidget {
                   //   allowDrawingOutsideViewBox: true,
                   // ),
                   child: Icon(
-                    FontAwesomeIcons.cloud,
+                    FontAwesomeIcons.cloudRain,
                     size: 55,
                     color: Colors.white,
                   ),
@@ -140,7 +140,7 @@ class WeatherCart extends StatelessWidget {
                 Transform.translate(
                   offset: Offset(180.0, 671.5),
                   child: Text(
-                    'Humidity : 12\nWind Speed : 46',
+                    'Humidity : 82%\nWindSpeed : 32km/h',
                     style: TextStyle(
                       fontFamily: 'Segoe UI',
                       fontSize: 11,
@@ -185,7 +185,7 @@ class WeatherCart extends StatelessWidget {
                 Transform.translate(
                   offset: Offset(146.0, 541.5),
                   child: Text(
-                    date.isEmpty ? '09/07/2020' : date,
+                    date.isEmpty ? '10/07/2020' : date,
                     style: TextStyle(
                       fontFamily: 'Segoe UI',
                       fontSize: 11,

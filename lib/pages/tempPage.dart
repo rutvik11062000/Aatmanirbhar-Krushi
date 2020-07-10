@@ -1,9 +1,16 @@
+import 'package:aatmanirbhar/models/AgroModes/AgroWeatherModel/agro.current.weather.model.dart';
+import 'package:aatmanirbhar/models/AgroModes/agro.soil.model.dart';
 import 'package:aatmanirbhar/pages/map.page.dart';
+import 'package:aatmanirbhar/services/AgroApiServices/soil.data.service.dart';
+import 'package:aatmanirbhar/services/AgroApiServices/weather.service.dart';
 import 'package:aatmanirbhar/widgets/aggregatedata.dart';
 import 'package:aatmanirbhar/widgets/current.weather.poly.dart';
 import 'package:aatmanirbhar/widgets/soildata.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+final userRef = Firestore.instance.collection('user');
 
 class Temp extends StatefulWidget {
   const Temp({Key key}) : super(key: key);
@@ -12,13 +19,42 @@ class Temp extends StatefulWidget {
   _TempState createState() => _TempState();
 }
 
-class _TempState extends State<Temp> with AutomaticKeepAliveClientMixin {
-  String defaultText = 'Select Part of Land';
-  List<String> haveLands = ['polygon 1', 'polygon 2'];
+class _TempState extends State<Temp> {
+  String defaultText = 'Select part of your land';
+  List<String> haveLands = [];
+  List<String> defaultList = ['polygon 1', 'polygon 2'];
+  AgroSoilResponse agroSoilResponseR = new AgroSoilResponse();
+  AgroWeatherPolygonResponse agroWeatherPolygonResponseR =
+      new AgroWeatherPolygonResponse();
 
-  onPolyChange(String v) {
+  onPolyChange(String v) async {
+    AgroSoilResponse agroSoilResponse = await fetchSoilData(v);
+    AgroWeatherPolygonResponse agroWeatherPolygonResponse =
+        await fetchCurrentWeatherPolygon(v);
     setState(() {
       defaultText = v;
+      agroSoilResponseR = agroSoilResponse;
+      agroWeatherPolygonResponseR = agroWeatherPolygonResponse;
+    });
+    print(agroWeatherPolygonResponseR.clouds.all);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    toDo();
+    super.initState();
+  }
+
+  toDo() async {
+    var docRef = userRef.document('CQyjPsOvztXS2eJ36RxJyA5PQNY2');
+    var doc = await docRef.get();
+    List list = doc['polygons'];
+    setState(() {
+      haveLands = [];
+      list.forEach((element) {
+        haveLands.add(element.toString());
+      });
     });
   }
 
@@ -42,20 +78,33 @@ class _TempState extends State<Temp> with AutomaticKeepAliveClientMixin {
                   defaultText,
                   style: TextStyle(fontWeight: FontWeight.w800),
                 ),
-                items: haveLands.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value.toString(),
-                    child: Text(value.toString()),
-                  );
-                }).toList(),
+                items: haveLands.isEmpty
+                    ? defaultList.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value.toString(),
+                          child: Text(value.toString()),
+                        );
+                      }).toList()
+                    : haveLands.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value.toString(),
+                          child: Text(value.toString()),
+                        );
+                      }).toList(),
                 onChanged: (value) => onPolyChange(value),
               ),
             ),
           ),
           SoilDataWidget(
-            moisture: "33",
-            surfaceTempreature: "34",
-            tempreatureD: "32",
+            moisture: agroSoilResponseR.moisture.toString() == null
+                ? "33"
+                : agroSoilResponseR.moisture.toString(),
+            surfaceTempreature: agroSoilResponseR.t0.toString().isEmpty
+                ? "34"
+                : agroSoilResponseR.t0.toString(),
+            tempreatureD: agroSoilResponseR.t10.toString().isEmpty
+                ? "32"
+                : agroSoilResponseR.t10.toString(),
           ),
           SizedBox(
             height: 20,
@@ -67,6 +116,29 @@ class _TempState extends State<Temp> with AutomaticKeepAliveClientMixin {
           SizedBox(
             height: 20,
           ),
+          // CurrentWeatherPolyWidget(
+          //   clouds: agroWeatherPolygonResponseR.clouds.toString() == null
+          //       ? "40"
+          //       : agroWeatherPolygonResponseR.clouds.toString(),
+          //   humidity:
+          //       agroWeatherPolygonResponseR.main.humidity.toString() == null
+          //           ? "3.9"
+          //           : agroWeatherPolygonResponseR.main.humidity.toString(),
+          //   pressure:
+          //       agroWeatherPolygonResponseR.main.pressure.toString() == null
+          //           ? "200"
+          //           : agroWeatherPolygonResponseR.main.pressure.toString(),
+          //   tempreature:
+          //       agroWeatherPolygonResponseR.main.temp.toString() == null
+          //           ? "36"
+          //           : agroWeatherPolygonResponseR.main.temp.toString(),
+          //   windDegree: agroWeatherPolygonResponseR.wind.deg.toString() == null
+          //       ? "32"
+          //       : agroWeatherPolygonResponseR.wind.deg.toString(),
+          //   windSpeed: agroWeatherPolygonResponseR.wind.deg.toString() == null
+          //       ? "33"
+          //       : agroWeatherPolygonResponseR.wind.deg.toString(),
+          // ),
           CurrentWeatherPolyWidget(
             clouds: "40",
             humidity: "3.9",
@@ -93,10 +165,6 @@ class _TempState extends State<Temp> with AutomaticKeepAliveClientMixin {
       ),
     );
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 }
 
 class KrushiPageHeader extends StatelessWidget {

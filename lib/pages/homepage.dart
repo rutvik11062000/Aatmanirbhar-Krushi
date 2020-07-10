@@ -140,14 +140,14 @@ class _HomePageState extends State<HomePage> {
                 body: TabBarView(
                   children: [
                     WeatherCart(
-                      city: "Jaipur",
-                      date: "09/07/2020",
-                      humidity: "1.8",
-                      iconData: FontAwesomeIcons.cloud,
+                      city: "Surat",
+                      date: "10/07/2020",
+                      humidity: "82%",
+                      iconData: FontAwesomeIcons.cloudRain,
                       maxTemp: "48",
                       minTemp: "38",
-                      tempreature: "36",
-                      windSpeed: "100",
+                      tempreature: "30",
+                      windSpeed: "23 km/h",
                     ),
                     ForecastSubWeather(),
                     HistorySubWeather(),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:aatmanirbhar/models/api.request.model.dart' as Request;
 import 'package:aatmanirbhar/models/api.response.model.dart';
 import 'package:aatmanirbhar/services/firestore.service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,6 +11,8 @@ import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:unicorndial/unicorndial.dart';
+
+final userRef = Firestore.instance.collection('user');
 
 class MapSample extends StatefulWidget {
   // final LocationData locationData;
@@ -42,10 +45,12 @@ class MapSampleState extends State<MapSample>
       print(response.body);
       print(res.id);
       addPolygonData(res.id);
+      showSnackBar();
     } else {
       print("failed");
       print(response.body);
       // throw Exception('Failed to load album');
+      showSnackBar1(response.body);
     }
   }
 
@@ -88,6 +93,17 @@ class MapSampleState extends State<MapSample>
     ));
   }
 
+  showSnackBar1(String body) {
+    final snackBar = SnackBar(
+      backgroundColor: Colors.yellow,
+      content: Text(
+        body,
+        style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black),
+      ),
+    );
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
+
   showSnackBar() {
     final snackBar = SnackBar(
       backgroundColor: Colors.yellow,
@@ -104,7 +120,10 @@ class MapSampleState extends State<MapSample>
 
     // Add Children here
     children.add(_profileOption(
-        iconData: FontAwesomeIcons.searchLocation, onPressed: () {}));
+        iconData: FontAwesomeIcons.searchLocation,
+        onPressed: () {
+          _goToTheLake();
+        }));
     children.add(_profileOption(
         iconData: FontAwesomeIcons.drawPolygon,
         onPressed: () {
@@ -214,10 +233,10 @@ class MapSampleState extends State<MapSample>
                             _polygons.clear();
                           });
                           createConnection(req);
+
                           // print(polyLatLng);
                           // fetchAlbum();
                           // print(jsonEncode(req.toJson()));
-                          showSnackBar();
                         },
                         icon: Icon(
                           FontAwesomeIcons.solidSave,
@@ -241,14 +260,14 @@ class MapSampleState extends State<MapSample>
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
-  // Future<void> _goToTheLake() async {
-  //   final GoogleMapController controller = await _controller.future;
-  //   locationData = await location.getLocation();
-  //   CameraPosition _kLake = CameraPosition(
-  //       bearing: 192.8334901395799,
-  //       target: LatLng(locationData.latitude, locationData.longitude),
-  //       // tilt: 59.440717697143555,
-  //       zoom: 19.151926040649414);
-  //   controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  // }
+  Future<void> _goToTheLake() async {
+    final GoogleMapController controller = await _controller.future;
+    locationData = await location.getLocation();
+    CameraPosition _kLake = CameraPosition(
+        bearing: 192.8334901395799,
+        target: LatLng(locationData.latitude, locationData.longitude),
+        // tilt: 59.440717697143555,
+        zoom: 19.151926040649414);
+    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  }
 }

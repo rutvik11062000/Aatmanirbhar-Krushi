@@ -5,8 +5,9 @@ import 'package:aatmanirbhar/models/AgroModes/agro.soil.model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future<AgroWeatherPolygonResponse> fetchCurrentWeatherPolygon() async {
-  String polygonID = '5f058fa4714b52524fe0a1b7';
+Future<AgroWeatherPolygonResponse> fetchCurrentWeatherPolygon(
+    String polygonID) async {
+  // String polygonID = '5f058fa4714b52524fe0a1b7';
   final response = await http.get(
       'http://api.agromonitoring.com/agro/1.0/weather?polyid=$polygonID&appid=3104cf3a98380e9333f8dc55232dae20');
 

@@ -1,5 +1,6 @@
 import 'package:aatmanirbhar/widgets/weatherCart.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ForecastSubWeather extends StatelessWidget {
   const ForecastSubWeather({Key key}) : super(key: key);
@@ -18,7 +19,16 @@ class ForecastSubWeather extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           return Padding(
             padding: const EdgeInsets.all(10.0),
-            child: WeatherCart(),
+            child: WeatherCart(
+              city: "Surat",
+              date: "10/07/2020",
+              humidity: "1.8",
+              iconData: FontAwesomeIcons.cloud,
+              maxTemp: "48",
+              minTemp: "38",
+              tempreature: "36",
+              windSpeed: "100",
+            ),
           );
         },
       ),
